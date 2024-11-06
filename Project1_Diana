@@ -1,0 +1,77 @@
+> model_linear <- lm(Quant ~ Price + Deal, data = tropic_data)
+> summary(model_linear)
+
+Call:
+lm(formula = Quant ~ Price + Deal, data = tropic_data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+ -61262  -19326   -7561    5550 1115154 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   241568      13389  18.043   <2e-16 ***
+Price         -55089       3495 -15.761   <2e-16 ***
+Deal           -3185       2663  -1.196    0.232    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 45480 on 1557 degrees of freedom
+Multiple R-squared:  0.147,	Adjusted R-squared:  0.1459 
+F-statistic: 134.2 on 2 and 1557 DF,  p-value: < 2.2e-16
+
+> model_semi_log <- lm(log(Quant) ~ Price + Deal, data = tropic_data)
+> summary(model_semi_log)
+
+Call:
+lm(formula = log(Quant) ~ Price + Deal, data = tropic_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-3.06616 -0.44357 -0.08061  0.39954  3.00897 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 15.69151    0.19436  80.732   <2e-16 ***
+Price       -1.52556    0.05074 -30.065   <2e-16 ***
+Deal         0.05986    0.03867   1.548    0.122    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6603 on 1557 degrees of freedom
+Multiple R-squared:  0.4057,	Adjusted R-squared:  0.4049 
+F-statistic: 531.4 on 2 and 1557 DF,  p-value: < 2.2e-16
+
+> model_log_log <- lm(log(Quant) ~ log(Price) + Deal, data = tropic_data)
+> summary(model_log_log)
+
+Call:
+lm(formula = log(Quant) ~ log(Price) + Deal, data = tropic_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-3.05541 -0.45016 -0.07944  0.41224  3.01102 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 16.97006    0.24282  69.889   <2e-16 ***
+log(Price)  -5.31352    0.18153 -29.270   <2e-16 ***
+Deal         0.07419    0.03895   1.905    0.057 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6667 on 1557 degrees of freedom
+Multiple R-squared:  0.3941,	Adjusted R-squared:  0.3933 
+F-statistic: 506.3 on 2 and 1557 DF,  p-value: < 2.2e-16
+
+> # Define a range of prices to evaluate
+> price_range <- seq(2.5, 5.0, by = 0.1)
+> 
+> # Calculate predicted sales and profit for each price using the semi-log model
+> predicted_sales <- exp(predict(model_semi_log, newdata = data.frame(Price = price_range, Deal = 0)))
+> profit <- (price_range - 2.57) * predicted_sales
+> 
+> # Find the optimal price
+> optimal_price <- price_range[which.max(profit)]
+> optimal_price
+[1] 3.2
